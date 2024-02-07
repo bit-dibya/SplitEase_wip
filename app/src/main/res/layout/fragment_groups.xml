@@ -1,15 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GroupsFragment"
-    android:background="@android:color/holo_red_light">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".GroupsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/text_no_groups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hey"
+        android:visibility="visible"
+        android:textSize="26sp"
+        android:padding="12dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:fontFamily="@font/abril_fatface"/>
+    <TextView
+        android:id="@+id/text_no_groups2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User,"
+        android:textColor="@android:color/holo_orange_dark"
+        android:visibility="visible"
+        android:layout_below="@id/text_no_groups"
+        android:textSize="26sp"
+        android:padding="12dp"
+        android:textStyle="bold"
+        android:fontFamily="@font/abril_fatface"/>
+    <TextView
+        android:id="@+id/text_no_groups3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="here is the summary of your existing groups: "
+        android:visibility="visible"
+        android:layout_below="@id/text_no_groups2"
+        android:textSize="26sp"
+        android:padding="12dp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textStyle="bold"
+        android:fontFamily="@font/abril_fatface"/>
+    <TextView
+        android:id="@+id/text_no_groups4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="oops! no groups found. Create one?"
+        android:visibility="visible"
+        android:textColor="@android:color/holo_red_dark"
+        android:layout_below="@id/text_no_groups3"
+        android:textSize="26sp"
+        android:padding="12dp"
+        android:textStyle="bold"
+        android:fontFamily="@font/calistoga"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_groups"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:visibility="gone" />
 
-</FrameLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_menu_add"
+        android:visibility="visible" />
+</RelativeLayout>
