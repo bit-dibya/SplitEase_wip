@@ -7,10 +7,11 @@ import android.content.Context;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "Groups.db";
-    private static final String TABLE_NAME = "groups_table";
+
+    public static final String DATABASE_NAME = "Groups.db";
+    public static final String TABLE_NAME = "groups_table";
     private static final String COL_ID = "ID";
-    private static final String COL_NAME = "NAME";
+    public static final String COL_NAME = "NAME";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);

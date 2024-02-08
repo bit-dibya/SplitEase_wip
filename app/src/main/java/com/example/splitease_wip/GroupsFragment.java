@@ -1,10 +1,13 @@
 package com.example.splitease_wip;
 
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.InputType;
@@ -17,12 +20,21 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link GroupsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class GroupsFragment extends Fragment {
+
+
+    // Table name constant
+    private static final String TABLE_NAME = "groups_table";
+
+    // Column name constant
+    private static final String COL_NAME = "group_name";
 
     private TextView textNoGroups;
     private TextView textNoGroups2;
@@ -79,6 +91,9 @@ public class GroupsFragment extends Fragment {
         boolean groupsExist = checkIfGroupsExist();
         if (groupsExist) {
             textNoGroups.setVisibility(View.GONE);
+            textNoGroups2.setVisibility(View.GONE);
+            textNoGroups3.setVisibility(View.GONE);
+            textNoGroups4.setVisibility(View.GONE);
             recyclerViewGroups.setVisibility(View.VISIBLE);
             setupRecyclerView();
         } else {
@@ -125,23 +140,71 @@ public class GroupsFragment extends Fragment {
 
     private void addGroupToDatabase(String groupName) {
         DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+
         boolean inserted = dbHelper.insertGroup(groupName);
         if (inserted) {
             // Update UI - Maybe refresh the group list
             Toast.makeText(getContext(), "Group added successfully", Toast.LENGTH_SHORT).show();
+            checkAndDisplayGroups();
         } else {
             Toast.makeText(getContext(), "Failed to add group", Toast.LENGTH_SHORT).show();
         }
     }
 
     private boolean checkIfGroupsExist() {
-        // Check if groups exist in SQLite database
-        // Return true if groups exist, false otherwise
-        return false; // For simplicity, returning false always
+        DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        // Query to count the number of rows in the table
+        String query = "SELECT COUNT(*) FROM " + DatabaseHelper.TABLE_NAME;
+
+        Cursor cursor = db.rawQuery(query, null);
+        int count = 0;
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                count = cursor.getInt(0); // Get the count from the first column of the first row
+            }
+            cursor.close();
+        }
+
+        return count > 0; // If count is greater than 0, groups exist; otherwise, return false
     }
 
+
     private void setupRecyclerView() {
-        // Set up RecyclerView adapter to display groups
-        // Retrieve groups from SQLite database and populate the adapter
+        DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        ArrayList<String> groupList = new ArrayList<>();
+
+        // Query the database to retrieve group names
+        Cursor cursor = db.query(DatabaseHelper.TABLE_NAME, new String[]{DatabaseHelper.COL_NAME}, null, null, null, null, null);
+        while (cursor.moveToNext()) {
+            String groupName = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COL_NAME));
+            groupList.add(groupName);
+        }
+        cursor.close();
+
+        // Create and set up the RecyclerView adapter
+        GroupAdapter adapter = new GroupAdapter(groupList);
+        recyclerViewGroups.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewGroups.setAdapter(adapter);
     }
+    private void checkAndDisplayGroups() {
+        boolean groupsExist = checkIfGroupsExist();
+
+        if (groupsExist) {
+            textNoGroups.setVisibility(View.GONE);
+            textNoGroups2.setVisibility(View.GONE);
+            textNoGroups3.setVisibility(View.GONE);
+            textNoGroups4.setVisibility(View.GONE);
+            recyclerViewGroups.setVisibility(View.VISIBLE);
+            setupRecyclerView(); // Call setupRecyclerView to display the groups
+        } else {
+            textNoGroups.setVisibility(View.VISIBLE);
+            recyclerViewGroups.setVisibility(View.GONE);
+        }
+    }
+
+
 }
