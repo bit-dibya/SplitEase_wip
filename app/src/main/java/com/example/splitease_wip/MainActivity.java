@@ -16,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView home;
     private Fragment fragment;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,4 +53,5 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.screen_holder,fragment,""); fragmentTransaction.commit();
 
     }
+
 }
